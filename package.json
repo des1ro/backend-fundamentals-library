@@ -1,0 +1,36 @@
+{
+  "name": "ts_env_for_lha",
+  "version": "1.0.0",
+  "description": "ts env for node scripts with jest and esbuild",
+  "main": "build/app.js",
+  "homepage": "https://academy.localhost-group.com/",
+  "scripts": {
+    "start": "concurrently \"bash run_dev_server.sh\" \"nodemon\"",
+    "test": "jest --watchAll"
+  },
+  "keywords": [
+    "env",
+    "typescript",
+    "simple",
+    "tasks",
+    "node",
+    "esbuild",
+    "jest"
+  ],
+  "author": "Przemocny",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.5.3",
+    "@types/node": "^20.4.1",
+    "@types/uuid": "^9.0.2",
+    "concurrently": "^8.2.0",
+    "esbuild": "^0.18.11",
+    "jest": "^29.6.1",
+    "nodemon": "^3.0.1",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "uuid": "^9.0.0"
+  }
+}
