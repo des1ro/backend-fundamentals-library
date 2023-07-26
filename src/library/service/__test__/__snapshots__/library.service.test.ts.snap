@@ -1,0 +1,206 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Library test suite Delete book test suite Should delete book properly 1`] = `Set {}`;
+
+exports[`Library test suite Delete book test suite Should delete book properly 2`] = `Set {}`;
+
+exports[`Library test suite Delete book test suite Should throw an LibraryError if book isn't in library 1`] = `Set {}`;
+
+exports[`Library test suite Should add book properly 1`] = `
+Set {
+  Book {
+    "author": "Test author One",
+    "id": 1,
+    "title": "Test title One",
+    "year": 1992,
+  },
+}
+`;
+
+exports[`Library test suite Should add book properly 2`] = `
+Set {
+  Book {
+    "author": "Test author One",
+    "id": 1,
+    "title": "Test title One",
+    "year": 1992,
+  },
+}
+`;
+
+exports[`Library test suite Should delete book form library and add to booking if user isn't banned  1`] = `Set {}`;
+
+exports[`Library test suite Should delete book form library and add to booking if user isn't banned  2`] = `
+Set {
+  Booking {
+    "books": Map {
+      Book {
+        "author": "Test author One",
+        "id": 1,
+        "title": "Test title One",
+        "year": 1992,
+      } => 2023-07-20T10:30:00.000Z,
+    },
+    "dueDate": 2023-07-20T10:30:00.000Z,
+    "user": User {
+      "credit": 0,
+      "name": "Test user one",
+      "uuid": "test-uuid",
+    },
+  },
+}
+`;
+
+exports[`Library test suite Should return book properly 1`] = `
+Booking {
+  "books": Map {
+    Book {
+      "author": "Test author One",
+      "id": 1,
+      "title": "Test title One",
+      "year": 1992,
+    } => 2023-07-20T10:30:00.000Z,
+  },
+  "dueDate": 2023-07-20T10:30:00.000Z,
+  "user": User {
+    "credit": 0,
+    "name": "Test user one",
+    "uuid": "test-uuid",
+  },
+}
+`;
+
+exports[`Library test suite Should return booking if it's in bookings 1`] = `
+Set {
+  Booking {
+    "books": Map {},
+    "dueDate": 2023-07-20T10:30:00.000Z,
+    "user": User {
+      "credit": 0,
+      "name": "Test user one",
+      "uuid": "test-uuid",
+    },
+  },
+  Booking {
+    "books": Map {},
+    "dueDate": 2023-07-20T10:30:00.000Z,
+    "user": User {
+      "credit": 0,
+      "name": "Test user one",
+      "uuid": "test-uuid",
+    },
+  },
+}
+`;
+
+exports[`Library test suite Should return new booking if isn't in bookings  1`] = `
+Booking {
+  "books": Map {},
+  "dueDate": 2023-07-20T10:30:00.000Z,
+  "user": User {
+    "credit": 0,
+    "name": "Test user one",
+    "uuid": "test-uuid",
+  },
+}
+`;
+
+exports[`Library test suite Should return new booking if isn't in bookings  2`] = `
+Set {
+  Booking {
+    "books": Map {},
+    "dueDate": 2023-07-20T10:30:00.000Z,
+    "user": User {
+      "credit": 0,
+      "name": "Test user one",
+      "uuid": "test-uuid",
+    },
+  },
+}
+`;
+
+exports[`Library test suite Should throw an LibraryError if banned user want to borrow book 1`] = `
+Booking {
+  "books": Map {},
+  "dueDate": 2023-09-20T10:30:00.000Z,
+  "user": User {
+    "credit": 0,
+    "name": "Test user one",
+    "uuid": "test-uuid",
+  },
+}
+`;
+
+exports[`Library test suite Should throw an LibraryError on returnig book, which isn't in bookings 1`] = `
+Booking {
+  "books": Map {
+    Book {
+      "author": "Test author One",
+      "id": 1,
+      "title": "Test title One",
+      "year": 1992,
+    } => 2023-07-20T10:30:00.000Z,
+  },
+  "dueDate": 2023-07-20T10:30:00.000Z,
+  "user": User {
+    "credit": 0,
+    "name": "Test user one",
+    "uuid": "test-uuid",
+  },
+}
+`;
+
+exports[`Library test suite Update booking test suite Should add user to block list if credit >= 10  1`] = `
+Set {
+  Booking {
+    "books": Map {},
+    "dueDate": 2023-08-20T10:30:00.000Z,
+    "user": User {
+      "credit": 0,
+      "name": "Test user one",
+      "uuid": "test-uuid",
+    },
+  },
+}
+`;
+
+exports[`Library test suite Update booking test suite Should add user to block list if credit >= 10  2`] = `
+Set {
+  Booking {
+    "books": Map {},
+    "dueDate": 2023-08-20T10:30:00.000Z,
+    "user": User {
+      "credit": 0,
+      "name": "Test user one",
+      "uuid": "test-uuid",
+    },
+  },
+}
+`;
+
+exports[`Library test suite Update booking test suite Should only add credit if user credit < 10 1`] = `
+Set {
+  Booking {
+    "books": Map {},
+    "dueDate": 2023-07-20T10:30:00.000Z,
+    "getUserCredit": [MockFunction] {
+      "calls": [
+        [
+          30,
+        ],
+      ],
+      "results": [
+        {
+          "type": "return",
+          "value": 9,
+        },
+      ],
+    },
+    "user": User {
+      "credit": 0,
+      "name": "Test user one",
+      "uuid": "test-uuid",
+    },
+  },
+}
+`;
