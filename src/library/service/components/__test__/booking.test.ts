@@ -3,16 +3,19 @@ import { Book } from "../../../book/book";
 import { User } from "../../../user/user";
 import { Booking } from "../booking";
 import { LibraryError } from "../../../exceptions/library.exceptions";
-jest.mock("../../../book/book");
 describe("Booking test suite", () => {
   let objectUnderTest: Booking;
   let mockedUser: User;
   let mockedBookOne: Book;
   let mockedBookTwo: Book;
   let testDate: Date;
+  let testBookBorrowMonthsLimit: number;
+  let testPenaltyPointsPerBook: number;
   beforeAll(() => {
     mockedBookOne = new Book("Test title One", "Test author One", 1992, 1);
     mockedBookTwo = new Book("Test title Two", "Test author Two", 1995, 2);
+    testBookBorrowMonthsLimit = 1;
+    testPenaltyPointsPerBook = 10;
   });
   beforeEach(() => {
     mockedUser = new User("Test user");
@@ -29,108 +32,244 @@ describe("Booking test suite", () => {
     //Then
     expect(user).toBe(mockedUser);
   });
-  it("Should get dueData properly", () => {
-    //Given
-    testDate = new Date();
-    objectUnderTest = new Booking(mockedUser, testDate);
-    const date = objectUnderTest.getDueDate();
-    //Then
-    expect(date).toBe(testDate);
-  });
-  it("Should check if book is in booking", () => {
-    //Given
-    objectUnderTest.borrowBook(mockedBookTwo);
-    //When
-    const resultOne = objectUnderTest.checkBook(mockedBookOne);
-    const resultTwo = objectUnderTest.checkBook(mockedBookTwo);
-    //Then
-    expect(resultOne).toBeFalsy();
-    expect(resultTwo).toBeTruthy();
-  });
-  describe("Get user credit test suite", () => {
-    it("Should increase credit if books reach borrow limit", () => {
+
+  describe("Get user penalty points test suite", () => {
+    it("Should increase penalty points if books reach borrow limit", () => {
       //Given
-      testDate = addDays(new Date(), 30);
-      const borrowLimit = 25;
       objectUnderTest = new Booking(mockedUser);
-      const spy = jest.spyOn(objectUnderTest, "borrowBook");
+      jest.spyOn(objectUnderTest, "isUserBanned").mockReturnValue(false);
+      testDate = addMonths(new Date(), 1);
+      testDate = addDays(testDate, 1);
       //When
-      objectUnderTest.borrowBook(mockedBookOne);
+      objectUnderTest.addBookToUser(
+        mockedBookOne,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
       jest.setSystemTime(testDate);
-      const result = objectUnderTest.getUserCredit(borrowLimit);
-      const expectedResult = 30 - 25;
+      objectUnderTest.checkUserPenaltyPoints(
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      const result = objectUnderTest.getUserPenaltyPoints();
       //Then
-      expect(spy).toBeCalledTimes(1);
-      expect(result).toBe(expectedResult);
+      expect(result).toBe(testPenaltyPointsPerBook);
+      expect(objectUnderTest.isUserBanned).toHaveBeenCalledTimes(1);
     });
-    it("Should get user credit if books don't reach borrow limit", () => {
+    it("Should not increase user penalty points if books don't reach borrow limit", () => {
       //Given
-      const testBookBorrowLimit = 1;
+      objectUnderTest = new Booking(mockedUser);
+      jest.spyOn(objectUnderTest, "isUserBanned");
+      //When
+      objectUnderTest.addBookToUser(
+        mockedBookOne,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      objectUnderTest.addBookToUser(
+        mockedBookTwo,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      testDate = addMonths(new Date(), 1);
+      testDate = addDays(testDate, -1);
+      jest.setSystemTime(testDate);
+      const result = objectUnderTest.getUserPenaltyPoints();
+      //Then
+      expect(result).toBe(0);
+      expect(objectUnderTest.isUserBanned).toHaveBeenCalledTimes(2);
+    });
+  });
+  describe("isUserBanned test suite", () => {
+    it("Should return false if user is not banned and not have books more than month", () => {
+      //Given
+      objectUnderTest = new Booking(mockedUser);
+      testDate = addMonths(new Date(), 1);
+      testDate = addDays(testDate, -1);
+      //When
+      objectUnderTest.addBookToUser(
+        mockedBookOne,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      jest.setSystemTime(testDate);
+      const expectedResult = objectUnderTest.isUserBanned(
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      //Then
+      expect(expectedResult).toBe(false);
+    });
+    it("Should return true if user have books more than month", () => {
+      //Given
+      objectUnderTest = new Booking(mockedUser);
+      testDate = addMonths(new Date(), 1);
+      testDate = addDays(testDate, 1);
+      //When
+      objectUnderTest.addBookToUser(
+        mockedBookOne,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      jest.setSystemTime(testDate);
+      const expectedResult = objectUnderTest.isUserBanned(
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      //Then
+      expect(expectedResult).toBe(true);
+    });
+    it("Should return true if user is banned", () => {
+      //Given
       objectUnderTest = new Booking(mockedUser);
       //When
-      objectUnderTest.borrowBook(mockedBookOne);
-      objectUnderTest.borrowBook(mockedBookTwo);
-      const result = objectUnderTest.getUserCredit(testBookBorrowLimit);
-      const expectedResult = mockedUser.getCredit();
+      mockedUser.setDueDate(addDays(new Date(), 1));
+      const expectedResult = objectUnderTest.isUserBanned(
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      //Then
+      expect(expectedResult).toBe(true);
+    });
+  });
+
+  it("Should add book to user properly", () => {
+    //Given
+    jest.setSystemTime(new Date(2023, 6, 20, 12, 30, 0, 0));
+    mockedUser = new User("test user");
+    objectUnderTest = new Booking(mockedUser);
+    jest.spyOn(objectUnderTest, "addBookToUser");
+    //When
+    objectUnderTest.addBookToUser(
+      mockedBookOne,
+      testBookBorrowMonthsLimit,
+      testPenaltyPointsPerBook
+    );
+    const expectedResult = objectUnderTest.getBooksDueDate();
+    //Then
+    expect(expectedResult).toMatchSnapshot();
+    expect(objectUnderTest.addBookToUser).toBeCalledTimes(1);
+  });
+  it("Should throw an error, when banned user wants to borrow book", () => {
+    //Given
+    objectUnderTest = new Booking(mockedUser);
+    //When
+    jest.spyOn(objectUnderTest, "isUserBanned").mockReturnValueOnce(true);
+    //Then
+
+    expect(() =>
+      objectUnderTest.addBookToUser(
+        mockedBookTwo,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      )
+    ).toThrow(LibraryError);
+    expect(objectUnderTest.isUserBanned).toBeCalledTimes(1);
+  });
+  describe("Return book test suite", () => {
+    it("Should return the book without any changes if it was returned on time", () => {
+      //Given
+      jest.setSystemTime(new Date(2023, 6, 20, 12, 30, 0, 0));
+      mockedUser = new User("test user");
+      objectUnderTest = new Booking(mockedUser);
+      testDate = addMonths(new Date(), 1);
+      testDate = addDays(testDate, -1);
+      //When
+      objectUnderTest.addBookToUser(
+        mockedBookOne,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      const resultOne = objectUnderTest.getBooksDueDate();
+      const snapshotOne = objectUnderTest.getBooksDueDate();
+      jest.setSystemTime(testDate);
+      objectUnderTest.returnBook(
+        mockedBookOne,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      const resultTwo = objectUnderTest.getBooksDueDate();
+      const snapshotTwo = objectUnderTest.getBooksDueDate();
+      //Then
+      expect(resultOne).toBe(resultTwo);
+      expect(snapshotOne).toMatchSnapshot();
+      expect(snapshotTwo).toMatchSnapshot();
+    });
+    it("Should add 10 points for every late book and remove 10 on return book", () => {
+      //Given
+      testDate = addMonths(new Date(), testBookBorrowMonthsLimit);
+      testDate = addDays(testDate, 1);
+      objectUnderTest = new Booking(mockedUser);
+      //When
+      objectUnderTest.addBookToUser(
+        mockedBookOne,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      objectUnderTest.addBookToUser(
+        mockedBookTwo,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      jest.setSystemTime(testDate);
+      objectUnderTest.returnBook(
+        mockedBookOne,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      const result = objectUnderTest.getUserPenaltyPoints();
+      const expectedResult = 20 - 10;
       //Then
       expect(result).toBe(expectedResult);
     });
-    it("Should reset the user's credit if it is blocked", () => {
+    it("Should ban the user for a month for each remaining late book", () => {
       //Given
-      const testBookBorrowLimit = 20;
-      testDate = addDays(new Date(), 30);
-      mockedUser.setCredit(5);
-      objectUnderTest = new Booking(mockedUser, testDate);
-      const spy = jest.spyOn(objectUnderTest, "getUserCredit");
+      jest.setSystemTime(new Date(2023, 0, 20, 12, 30, 0, 0));
+      testDate = addMonths(new Date(), testBookBorrowMonthsLimit);
+      testDate = addDays(testDate, 1);
+      mockedUser = new User("Test user");
+      objectUnderTest = new Booking(mockedUser);
+
       //When
-      const result = mockedUser.getCredit();
-      const resultCredit = objectUnderTest.getUserCredit(testBookBorrowLimit);
+      objectUnderTest.addBookToUser(
+        mockedBookOne,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      objectUnderTest.addBookToUser(
+        mockedBookTwo,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      jest.setSystemTime(testDate);
+      objectUnderTest.returnBook(
+        mockedBookOne,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      );
+      const resultOne = objectUnderTest.getUserDueDate();
+      const expectedResultOne = addMonths(new Date(), 2);
       //Then
-      expect(result).toBe(5);
-      expect(resultCredit).toBe(0);
-      expect(spy).toBeCalledTimes(1);
+      expect(expectedResultOne).toStrictEqual(resultOne);
     });
   });
-  it("Should block user for one month", () => {
+  it("Should throw an Library error on returning wrong book", () => {
     //Given
     objectUnderTest = new Booking(mockedUser);
-    const spy = jest.spyOn(objectUnderTest, "getBlockUser");
+
     //When
-    const expectedResult = addMonths(new Date(), 1);
-    objectUnderTest = objectUnderTest.getBlockUser();
-    //Then
-    expect(spy).toBeCalledTimes(1);
-    expect(objectUnderTest.getDueDate()).toStrictEqual(expectedResult);
-  });
-  it("Should return book properly", () => {
-    //Given
-    jest.setSystemTime(new Date());
-    objectUnderTest = new Booking(mockedUser);
-    const spy = jest.spyOn(objectUnderTest, "returnBook");
-    //When
-    objectUnderTest.borrowBook(mockedBookOne);
-    const resultOne = objectUnderTest.checkBook(mockedBookOne);
-    objectUnderTest.returnBook(mockedBookOne);
-    const resultTwo = objectUnderTest.checkBook(mockedBookOne);
-    //Then
-    expect(resultOne).toBeTruthy();
-    expect(resultTwo).toBeFalsy();
-    expect(spy).toBeCalledWith(mockedBookOne);
-  });
-  it("Should throw an error on returing wrong book", () => {
-    //Given
-    objectUnderTest = new Booking(mockedUser);
-    const spy = jest.spyOn(objectUnderTest, "checkBook");
-    //When
-    objectUnderTest.borrowBook(mockedBookOne);
-    const resultOne = objectUnderTest.checkBook(mockedBookOne);
-    const resultTwo = objectUnderTest.checkBook(mockedBookTwo);
-    //Then
-    expect(resultOne).toBeTruthy();
-    expect(resultTwo).toBeFalsy();
-    expect(spy).toBeCalledTimes(2);
-    expect(() => objectUnderTest.returnBook(mockedBookTwo)).toThrow(
-      LibraryError
+    objectUnderTest.addBookToUser(
+      mockedBookOne,
+      testBookBorrowMonthsLimit,
+      testPenaltyPointsPerBook
     );
+    //Then
+    expect(() =>
+      objectUnderTest.returnBook(
+        mockedBookTwo,
+        testBookBorrowMonthsLimit,
+        testPenaltyPointsPerBook
+      )
+    ).toThrow(LibraryError);
   });
 });

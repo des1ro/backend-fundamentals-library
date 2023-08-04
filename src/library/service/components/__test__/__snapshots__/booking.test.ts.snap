@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Booking test suite Return book test suite Should return the book without any changes if it was returned on time 1`] = `Map {}`;
+
+exports[`Booking test suite Return book test suite Should return the book without any changes if it was returned on time 2`] = `Map {}`;
+
+exports[`Booking test suite Should add book to user properly 1`] = `
+Map {
+  Book {
+    "author": "Test author One",
+    "id": 1,
+    "title": "Test title One",
+    "year": 1992,
+  } => 2023-07-20T10:30:00.000Z,
+}
+`;

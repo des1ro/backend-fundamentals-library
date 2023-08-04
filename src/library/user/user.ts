@@ -2,21 +2,30 @@ import { randomUUID } from "crypto";
 
 export class User {
   private readonly uuid: string = randomUUID();
-  private credit: number = 0;
-  constructor(private readonly name: string) {}
+  constructor(
+    private readonly name: string,
+    private penaltyPoints: number = 0,
+    private dueDate = new Date()
+  ) {}
   getName(): string {
     return this.name;
   }
   getUuid(): string {
     return this.uuid;
   }
-  resetCredit() {
-    this.credit = 0; // Czy tu powinienem wrzucić credit do construktora, (private readonly credit) i chcąc zmiany tworzyć new User?
+  getPenaltyPoints() {
+    return this.penaltyPoints;
   }
-  getCredit() {
-    return this.credit;
+  addPenaltyPoints(penaltyPoints: number): void {
+    this.penaltyPoints += penaltyPoints;
   }
-  setCredit(credit: number): void {
-    this.credit = credit;
+  getDueDate() {
+    return this.dueDate;
+  }
+  setDueDate(date: Date) {
+    this.dueDate = date;
+  }
+  resetPenaltyPoints() {
+    this.penaltyPoints = 0;
   }
 }
