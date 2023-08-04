@@ -11,16 +11,16 @@ describe("Book test suite", () => {
     const result: boolean = validate(objectUnderTest.getUuid());
     //Then
     expect(objectUnderTest.getName()).toBe(testName);
-    expect(objectUnderTest.getCredit()).toBe(0);
+    expect(objectUnderTest.getPenaltyPoints()).toBe(0);
     expect(result).toBeTruthy();
   });
-  it("Should set credit properly", () => {
+  it("Should set penaltyPoints properly", () => {
     //Given
-    const credit = 5;
-    objectUnderTest.setCredit(credit);
+    const penaltyPoints = 5;
+    objectUnderTest.addPenaltyPoints(penaltyPoints);
     //When
-    const result = objectUnderTest.getCredit();
+    const result = objectUnderTest.getPenaltyPoints();
     //Then
-    expect(result).toBe(credit);
+    expect(result).toBe(penaltyPoints);
   });
 });

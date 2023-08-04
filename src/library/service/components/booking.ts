@@ -1,57 +1,91 @@
-import { addMonths, differenceInDays, isAfter } from "date-fns";
+import { addMonths, differenceInMonths, isAfter } from "date-fns";
 import { Book } from "../../book/book";
 import { User } from "../../user/user";
 import { LibraryError } from "../../exceptions/library.exceptions";
-
 export class Booking {
   constructor(
     private readonly user: User,
-    private readonly dueDate = new Date(),
-    private readonly books = new Map<Book, Date>()
+    private readonly booksDueDate = new Map<Book, Date>()
   ) {}
   getUser(): User {
     return this.user;
   }
-  getDueDate() {
-    return this.dueDate;
+  isUserBanned(
+    bookBorrowMonthsLimit: number,
+    penaltyPointsLimit: number
+  ): boolean {
+    const isBanned = isAfter(this.user.getDueDate(), new Date());
+    if (isBanned) {
+      return true;
+    }
+    const userPenaltyPoints = this.checkUserPenaltyPoints(
+      bookBorrowMonthsLimit,
+      penaltyPointsLimit
+    );
+    if (userPenaltyPoints > 0) {
+      const banMonths = userPenaltyPoints / 10;
+      this.user.setDueDate(addMonths(new Date(), banMonths));
+      return true;
+    }
+    return false;
   }
-  checkBook(book: Book): boolean {
-    return this.books.has(book);
+  addBookToUser(
+    book: Book,
+    bookBorrowMonthsLimit: number,
+    penaltyPointsLimit: number
+  ): void {
+    if (!this.isUserBanned(bookBorrowMonthsLimit, penaltyPointsLimit)) {
+      this.booksDueDate.set(book, new Date());
+      return;
+    }
+    throw new LibraryError({
+      name: "PERRMISION_DENIED",
+      message: "User is banned!",
+    });
+  }
+  checkUserPenaltyPoints(
+    bookBorrowMonthsLimit: number,
+    penaltyPointsPerBook: number
+  ): number {
+    let penaltyPoints = 0;
+    this.booksDueDate.forEach((bookDate) => {
+      const difference = differenceInMonths(new Date(), bookDate);
+      if (difference >= bookBorrowMonthsLimit)
+        penaltyPoints += penaltyPointsPerBook;
+    });
+    this.user.addPenaltyPoints(penaltyPoints);
+    return this.user.getPenaltyPoints();
   }
 
-  getUserCredit(limit: number): number {
-    let credit: number = 0;
-    if (isAfter(this.dueDate, new Date())) {
-      this.resetCredit();
-      return this.user.getCredit();
-    }
-    for (const [book, date] of this.books) {
-      const days = differenceInDays(new Date(), date);
-      if (days > limit) {
-        credit += days - limit;
+  returnBook(
+    returnedBook: Book,
+    bookBorrowMonthsLimit: number,
+    penaltyPointsPerBook: number
+  ): void {
+    const isUserBanned = this.isUserBanned(
+      bookBorrowMonthsLimit,
+      penaltyPointsPerBook
+    );
+    if (this.booksDueDate.has(returnedBook)) {
+      const date = this.booksDueDate.get(returnedBook);
+      if (date && isAfter(new Date(), addMonths(date, 1)) && isUserBanned) {
+        this.user.addPenaltyPoints(-penaltyPointsPerBook);
       }
-    }
-    const creditSum = this.user.getCredit() + credit;
-    this.user.setCredit(creditSum);
-    return creditSum;
-  }
-  resetCredit() {
-    this.user.resetCredit();
-  }
-  borrowBook(book: Book): void {
-    this.books.set(book, new Date());
-  }
-  getBlockUser() {
-    return new Booking(this.user, addMonths(new Date(), 1), this.books);
-  }
-  returnBook(book: Book): void {
-    if (this.checkBook(book)) {
-      this.books.delete(book);
+      this.booksDueDate.delete(returnedBook);
       return;
     }
     throw new LibraryError({
       name: "INVALID_BOOK",
       message: "The book is not in the user's list",
     });
+  }
+  getBooksDueDate(): Map<Book, Date> {
+    return this.booksDueDate;
+  }
+  getUserDueDate() {
+    return this.user.getDueDate();
+  }
+  getUserPenaltyPoints() {
+    return this.user.getPenaltyPoints();
   }
 }
