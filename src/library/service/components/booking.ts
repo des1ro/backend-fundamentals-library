@@ -1,10 +1,7 @@
-import { add, addMonths, differenceInMonths, isAfter } from "date-fns";
+import { addMonths, differenceInMonths, isAfter } from "date-fns";
 import { Book } from "../../book/book";
 import { User } from "../../user/user";
 import { LibraryError } from "../../exceptions/library.exceptions";
-// sprawdzać przy oddawaniu czy książka po terminie
-// wszystko w bookingu
-// user ma mieć
 export class Booking {
   constructor(
     private readonly user: User,
