@@ -1,7 +1,7 @@
 import { addDays, addMonths } from "date-fns";
 import { Book } from "../../../book/book";
 import { User } from "../../../user/user";
-import { Booking } from "../booking";
+import { Booking } from "../booking.service";
 import { LibraryError } from "../../../exceptions/library.exceptions";
 describe("Booking test suite", () => {
   let objectUnderTest: Booking;

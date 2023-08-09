@@ -18,3 +18,17 @@ export class Book {
     return this.year;
   }
 }
+/**
+ * book ->
+ *  book.service.ts
+ *  book.dto.ts
+ *
+ *
+ * book ->
+ *    services ->
+ *      book.service.ts
+ *      newspaper.service.ts
+ *    dto ->
+ *      book.dto.ts
+ *       .....
+ */

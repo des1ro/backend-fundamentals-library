@@ -8,7 +8,7 @@ describe("Book test suite", () => {
     const testName = "Test name";
     //When
     objectUnderTest = new User(testName);
-    const result: boolean = validate(objectUnderTest.getUuid());
+    const result: boolean = validate(objectUnderTest.uuid);
     //Then
     expect(objectUnderTest.getName()).toBe(testName);
     expect(objectUnderTest.getPenaltyPoints()).toBe(0);
