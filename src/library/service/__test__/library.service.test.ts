@@ -1,7 +1,7 @@
 import { Book } from "../../../book/book";
 import { LibraryError } from "../../../exceptions/library.exceptions";
 import { User } from "../../../user/user";
-import { Library } from "../library.service";
+import { Library } from "../../library.service";
 jest.mock("crypto", () => ({
   randomUUID: jest.fn().mockReturnValue("test-uuid"),
 }));

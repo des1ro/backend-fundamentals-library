@@ -1,4 +1,8 @@
-type ErrorName = "PERMISION_DENIED" | "INVALID_BOOK" | "BOOKING_ERROR";
+type ErrorName =
+  | "PERMISION_DENIED"
+  | "INVALID_BOOK"
+  | "BOOKING_ERROR"
+  | "BOOKTRACKER_ERROR";
 export class LibraryError extends Error {
   name: string;
   message: string;

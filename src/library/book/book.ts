@@ -1,21 +1,16 @@
+import { BookTracker } from "./components/bookTracker";
+
 export class Book {
+  private borrowedBy: BookTracker;
   constructor(
-    private readonly title: string,
-    private readonly author: string,
-    private readonly year: number,
-    private readonly id: number
-  ) {}
-  getId(): number {
-    return this.id;
+    readonly title: string,
+    readonly author: string,
+    readonly year: number
+  ) {
+    this.borrowedBy = new BookTracker();
   }
-  getTitle(): string {
-    return this.title;
-  }
-  getAuthor(): string {
-    return this.author;
-  }
-  getYear(): number {
-    return this.year;
+  bookTracker() {
+    return this.borrowedBy;
   }
 }
 /**
