@@ -1,21 +1,19 @@
 import { randomUUID } from "crypto";
 export class User {
   readonly uuid: string = randomUUID();
-  private dueDate?: Date;
+  private dueDate?: number;
   private penaltyPoints = 0;
   constructor(readonly name: string) {}
   getPenaltyPoints() {
-    this.penaltyPoints;
     return this.penaltyPoints;
   }
   addPenaltyPoints(penaltyPoints: number): void {
     this.penaltyPoints += penaltyPoints;
   }
   getDueDate() {
-    const dueDate = this.dueDate || 0;
-    return dueDate;
+    return this.dueDate || 0;
   }
-  setDueDate(date: Date): void {
+  setDueDate(date: number): void {
     this.dueDate = date;
   }
   resetPenaltyPoints(): void {

@@ -1,19 +1,26 @@
-import { Book } from "../book/book";
-import { LibraryError } from "../exceptions/library.exceptions";
-import { User } from "../user/user";
-import { Booking } from "../booking/service/booking.service";
+import { Book } from "../../book/book";
+import { Booking } from "../../booking/service/booking.service";
+import { LibraryError } from "../../exceptions/library.exceptions";
+import { User } from "../../user/user";
+
+/**
+ * src ->
+ *  data
+ *  errors
+ *  library
+ *
+ *
+ * src ->
+ *  booking
+ *  user
+ *  library
+ *  ...
+ */
 export class Library {
-  private readonly bookBorrowMonthsLimit: number;
-  private readonly penaltyPointsPerBook: number;
-  private readonly penaltyPointsLimit: number;
   constructor(
     private readonly libraryBooks = new Map<Book, number>(),
     private readonly bookings = new Map<User, Booking>()
-  ) {
-    this.bookBorrowMonthsLimit = 1;
-    this.penaltyPointsPerBook = 10;
-    this.penaltyPointsLimit = 10;
-  }
+  ) {}
   addBook(book: Book): void {
     const value = this.libraryBooks.get(book) || 0;
     this.libraryBooks.set(book, 1 + value);
@@ -28,7 +35,7 @@ export class Library {
     }
     const newAmount = currentAmount - amount;
     if (newAmount > 0) {
-      this.libraryBooks.set(book, currentAmount - amount);
+      this.libraryBooks.set(book, newAmount);
       return;
     }
     this.libraryBooks.delete(book);
@@ -45,20 +52,14 @@ export class Library {
   borrowBook(user: User, book: Book) {
     const booking = this.bookings.get(user);
     const currentAmount = this.libraryBooks.get(book) || 0;
-    if (currentAmount <= 0) {
+    if (currentAmount === 0) {
       throw new LibraryError({
         name: "INVALID_BOOK",
         message: "Book isn't in library",
       });
     }
     if (booking) {
-      book.bookTracker().borrow(user);
-      booking.addBookToUser(
-        book,
-        this.bookBorrowMonthsLimit,
-        this.penaltyPointsPerBook,
-        this.penaltyPointsLimit
-      );
+      booking.addBookToUser(book);
       this.libraryBooks.set(book, currentAmount - 1);
       return;
     }
@@ -67,8 +68,7 @@ export class Library {
       message: "Booking does not exist",
     });
   }
-  returnBook(book: Book) {
-    const user = book.bookTracker().getUser();
+  returnBook(user: User, book: Book) {
     const booking = this.bookings.get(user);
     if (!booking) {
       throw new LibraryError({
@@ -76,15 +76,15 @@ export class Library {
         message: "Book not found",
       });
     }
-    booking.returnBook(
-      book,
-      this.bookBorrowMonthsLimit,
-      this.penaltyPointsPerBook,
-      this.penaltyPointsLimit
-    );
-    book.bookTracker().reset();
-    const currentAmount = this.libraryBooks.get(book) || 0;
-    this.libraryBooks.set(book, currentAmount + 1);
-    return;
+    booking.returnBook(book);
+    const currentAmount = this.libraryBooks.get(book);
+    if (currentAmount !== undefined) {
+      this.libraryBooks.set(book, currentAmount + 1);
+      return;
+    }
+    throw new LibraryError({
+      name: "INVALID_BOOK",
+      message: "Book not found in library",
+    });
   }
 }
