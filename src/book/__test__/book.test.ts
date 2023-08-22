@@ -8,11 +8,10 @@ describe("Book test suite", () => {
     const testYear = 2021;
     const testId = 37;
     //When
-    objectUnderTest = new Book(testTitle, testAuthor, testYear, testId);
+    objectUnderTest = new Book(testTitle, testAuthor, testYear);
     //Then
-    expect(objectUnderTest.getTitle()).toBe(testTitle);
-    expect(objectUnderTest.getAuthor()).toBe(testAuthor);
-    expect(objectUnderTest.getYear()).toBe(testYear);
-    expect(objectUnderTest.getId()).toBe(testId);
+    expect(objectUnderTest.title).toBe(testTitle);
+    expect(objectUnderTest.author).toBe(testAuthor);
+    expect(objectUnderTest.year).toBe(testYear);
   });
 });

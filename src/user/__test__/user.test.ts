@@ -2,15 +2,14 @@ import { validate } from "uuid";
 import { User } from "../user";
 describe("Book test suite", () => {
   let objectUnderTest: User;
-
   it("Should create book object properly", () => {
     //Given
     const testName = "Test name";
     //When
     objectUnderTest = new User(testName);
-    const result: boolean = validate(objectUnderTest.getUuid());
+    const result: boolean = validate(objectUnderTest.uuid);
     //Then
-    expect(objectUnderTest.getName()).toBe(testName);
+    expect(objectUnderTest.name).toBe(testName);
     expect(objectUnderTest.getPenaltyPoints()).toBe(0);
     expect(result).toBeTruthy();
   });

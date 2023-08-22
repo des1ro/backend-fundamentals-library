@@ -1,63 +1,84 @@
-import { Book } from "../book/book";
-import { LibraryError } from "../exceptions/library.exceptions";
-import { User } from "../user/user";
-import { Booking } from "./components/booking";
+import { Book } from "../../book/book";
+import { Booking } from "../../booking/service/booking.service";
+import { LibraryError } from "../../exceptions/library.exceptions";
+import { User } from "../../user/user";
+import { UsersUpdate } from "../userLibraryUpdate/usersUpdate.service";
+
 export class Library {
-  private readonly bookBorrowMonthsLimit: number;
-  private readonly penaltyPointsPerBook: number;
+  private readonly usersUpdate: UsersUpdate;
   constructor(
-    private readonly libraryBooks = new Map<Book, boolean>(),
+    private readonly libraryBooks = new Map<Book, number>(),
     private readonly bookings = new Map<User, Booking>()
   ) {
-    this.bookBorrowMonthsLimit = 1;
-    this.penaltyPointsPerBook = 10;
+    this.usersUpdate = new UsersUpdate();
+  }
+  constantlyUpdateUsers() {
+    this.usersUpdate.update(this.bookings);
   }
   addBook(book: Book): void {
-    this.libraryBooks.set(book, true);
+    const value = this.libraryBooks.get(book) || 0;
+    this.libraryBooks.set(book, 1 + value);
   }
-  deleteBook(book: Book): void {
-    if (!this.libraryBooks.delete(book)) {
+  deleteBook(book: Book, amount: number = 1): void {
+    const currentAmount = this.libraryBooks.get(book);
+    if (!currentAmount) {
       throw new LibraryError({
         name: "INVALID_BOOK",
-        message: "The book is not available in the library",
+        message: "The book is not available in this library",
       });
     }
+    const newAmount = currentAmount - amount;
+    if (newAmount > 0) {
+      this.libraryBooks.set(book, newAmount);
+      return;
+    }
+    this.libraryBooks.delete(book);
+  }
+  createBooking(user: User) {
+    if (this.bookings.get(user)) {
+      throw new LibraryError({
+        name: "BOOKING_ERROR",
+        message: "Booking already exist",
+      });
+    }
+    this.bookings.set(user, new Booking(user));
   }
   borrowBook(user: User, book: Book) {
-    let booking = this.bookings.get(user);
-    if (!booking) {
-      booking = new Booking(user);
-      this.bookings.set(user, booking);
+    const booking = this.bookings.get(user);
+    const currentAmount = this.libraryBooks.get(book) || 0;
+    if (currentAmount === 0) {
+      throw new LibraryError({
+        name: "INVALID_BOOK",
+        message: "Book isn't in library",
+      });
     }
-    booking.addBookToUser(
-      book,
-      this.bookBorrowMonthsLimit,
-      this.penaltyPointsPerBook
-    );
-    this.libraryBooks.set(book, false);
-  }
-  returnBook(book: Book) {
-    const booking = Array.from(this.bookings.values()).find((booking) =>
-      booking.getBooksDueDate().has(book)
-    );
     if (booking) {
-      booking.returnBook(
-        book,
-        this.bookBorrowMonthsLimit,
-        this.penaltyPointsPerBook
-      );
-      this.libraryBooks.set(book, true);
+      booking.addBookToUser(book);
+      this.libraryBooks.set(book, currentAmount - 1);
+      return;
+    }
+    throw new LibraryError({
+      name: "BOOKING_ERROR",
+      message: "Booking does not exist",
+    });
+  }
+  returnBook(user: User, book: Book) {
+    const booking = this.bookings.get(user);
+    if (!booking) {
+      throw new LibraryError({
+        name: "INVALID_BOOK",
+        message: "Book not found",
+      });
+    }
+    booking.returnBook(book);
+    const currentAmount = this.libraryBooks.get(book);
+    if (currentAmount !== undefined) {
+      this.libraryBooks.set(book, currentAmount + 1);
       return;
     }
     throw new LibraryError({
       name: "INVALID_BOOK",
-      message: "Book not found",
+      message: "Book not found in library",
     });
-  }
-  getBooks() {
-    return this.libraryBooks;
-  }
-  getBookings() {
-    return this.bookings;
   }
 }
