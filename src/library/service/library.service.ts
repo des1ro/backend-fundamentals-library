@@ -2,25 +2,19 @@ import { Book } from "../../book/book";
 import { Booking } from "../../booking/service/booking.service";
 import { LibraryError } from "../../exceptions/library.exceptions";
 import { User } from "../../user/user";
+import { UsersUpdate } from "../userLibraryUpdate/usersUpdate.service";
 
-/**
- * src ->
- *  data
- *  errors
- *  library
- *
- *
- * src ->
- *  booking
- *  user
- *  library
- *  ...
- */
 export class Library {
+  private readonly usersUpdate: UsersUpdate;
   constructor(
     private readonly libraryBooks = new Map<Book, number>(),
     private readonly bookings = new Map<User, Booking>()
-  ) {}
+  ) {
+    this.usersUpdate = new UsersUpdate();
+  }
+  constantlyUpdateUsers() {
+    this.usersUpdate.update(this.bookings);
+  }
   addBook(book: Book): void {
     const value = this.libraryBooks.get(book) || 0;
     this.libraryBooks.set(book, 1 + value);

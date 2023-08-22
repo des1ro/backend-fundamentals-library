@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import { isAfter } from "date-fns";
 export class User {
   readonly uuid: string = randomUUID();
   private dueDate?: number;
@@ -10,13 +11,16 @@ export class User {
   addPenaltyPoints(penaltyPoints: number): void {
     this.penaltyPoints += penaltyPoints;
   }
+  subtractPenaltyPoints(penaltyPoints: number): void {
+    this.penaltyPoints -= penaltyPoints;
+  }
   getDueDate() {
     return this.dueDate || 0;
   }
   setDueDate(date: number): void {
     this.dueDate = date;
   }
-  resetPenaltyPoints(): void {
-    this.penaltyPoints = 0;
+  isBanned(): boolean {
+    return isAfter(this.getDueDate(), new Date());
   }
 }
