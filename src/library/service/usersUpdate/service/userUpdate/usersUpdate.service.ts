@@ -6,7 +6,7 @@ import { Booking } from "../../../booking/booking.service";
 export class UsersUpdate {
   private readonly penaltyPointsCalc: PenaltyPoints;
   // Nie wstrzykuje zależności, bo musi pobierać cały czas dane z library by były aktualne do aktualizacji, inaczej by to wyglądało gdyby była baza danych,
-  // wtedy bym pobierał za każdym razem z bazy
+  // wtedy bym pobierał za każdym razem z bazy tako
 
   constructor() {
     this.penaltyPointsCalc = new PenaltyPoints();
