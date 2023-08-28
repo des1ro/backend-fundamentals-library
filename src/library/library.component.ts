@@ -2,7 +2,7 @@ import { Book } from "../book/book.dto";
 import { LibraryError } from "../exceptions/library.exceptions";
 import { User } from "../user/user.dto";
 import { Booking } from "./service/booking/booking.service";
-import { UsersUpdate } from "./service/usersUpdate/usersUpdate.service";
+import { UsersUpdate } from "./service/usersUpdate/service/userUpdate/usersUpdate.service";
 import * as cron from "node-cron";
 
 export class Library {

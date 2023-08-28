@@ -1,7 +1,7 @@
-import { PenaltyPoints } from "./service/penaltyPoints/penaltyPoints.service";
+import { PenaltyPoints } from "../penaltyPoints/penaltyPoints.service";
 import { isAfter } from "date-fns";
-import { User } from "../../../user/user.dto";
-import { Booking } from "../booking/booking.service";
+import { User } from "../../../../../user/user.dto";
+import { Booking } from "../../../booking/booking.service";
 
 export class UsersUpdate {
   private readonly penaltyPointsCalc: PenaltyPoints;
