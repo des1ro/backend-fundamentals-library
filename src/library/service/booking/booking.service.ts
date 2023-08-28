@@ -1,7 +1,8 @@
-import { addMonths, isAfter } from "date-fns";
-import { Book } from "../../book/book";
-import { LibraryError } from "../../exceptions/library.exceptions";
-import { User } from "../../user/user";
+import { isAfter, addMonths } from "date-fns";
+import { Book } from "../../../book/book.dto";
+import { LibraryError } from "../../../exceptions/library.exceptions";
+import { User } from "../../../user/user.dto";
+
 export class Booking {
   private readonly penaltyPointsPerBook: number;
   constructor(
@@ -11,7 +12,8 @@ export class Booking {
     this.penaltyPointsPerBook = 10;
   }
   addBookToUser(book: Book): void {
-    if (this.user.isBanned()) {
+    const isBanned = isAfter(this.user.getDueDate(), new Date());
+    if (isBanned) {
       throw new LibraryError({
         name: "PERMISION_DENIED",
         message: "User is banned!",
@@ -31,13 +33,12 @@ export class Booking {
     const bookIsAfterDueDate = isAfter(new Date(), bookBorrowDateLimit);
     this.booksBorrowDate.delete(returnedBook);
     if (bookIsAfterDueDate) {
-      this.user.subtractPenaltyPoints(this.penaltyPointsPerBook);
+      const penaltyPoints =
+        this.user.getPenaltyPoints() + this.penaltyPointsPerBook;
+      this.user.setPenaltyPoints(penaltyPoints);
     }
   }
-  has(book: Book): boolean {
-    return this.booksBorrowDate.has(book);
-  }
-  _getBooksDatesArray(): Date[] {
+  getBooksDatesArray(): Date[] {
     const datesArray = Array.from(this.booksBorrowDate.values());
     return datesArray;
   }

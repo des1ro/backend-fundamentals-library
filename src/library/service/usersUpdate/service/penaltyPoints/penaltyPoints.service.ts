@@ -1,5 +1,6 @@
 import { addMonths, differenceInMonths } from "date-fns";
-import { User } from "../../user/user";
+import { User } from "../../../../../user/user.dto";
+
 export class PenaltyPoints {
   private readonly borrowMonthsLimit: number;
   private readonly penaltyPointsPerBook: number;
@@ -8,7 +9,8 @@ export class PenaltyPoints {
     this.penaltyPointsPerBook = 10;
   }
   updatePenaltyPointsAndBan(user: User, penaltyPoints: number): void {
-    user.addPenaltyPoints(penaltyPoints);
+    const penaltyPointsToSet = user.getPenaltyPoints() + penaltyPoints;
+    user.setPenaltyPoints(penaltyPointsToSet);
     const userPenatlyPoints = user.getPenaltyPoints();
     const banMonths = userPenatlyPoints / 10;
     const currentDate = new Date();

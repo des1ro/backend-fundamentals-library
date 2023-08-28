@@ -1,8 +1,9 @@
-import { Book } from "../../book/book";
-import { Booking } from "../../booking/service/booking.service";
-import { LibraryError } from "../../exceptions/library.exceptions";
-import { User } from "../../user/user";
-import { UsersUpdate } from "../userLibraryUpdate/usersUpdate.service";
+import { Book } from "../book/book.dto";
+import { LibraryError } from "../exceptions/library.exceptions";
+import { User } from "../user/user.dto";
+import { Booking } from "./service/booking/booking.service";
+import { UsersUpdate } from "./service/usersUpdate/usersUpdate.service";
+import * as cron from "node-cron";
 
 export class Library {
   private readonly usersUpdate: UsersUpdate;
@@ -12,8 +13,12 @@ export class Library {
   ) {
     this.usersUpdate = new UsersUpdate();
   }
-  constantlyUpdateUsers() {
-    this.usersUpdate.update(this.bookings);
+  constantlyUpdateUsers(): void {
+    cron.schedule("* 30 5 * * * ", () => {
+      console.log("Update users every day at 5:30");
+      this.usersUpdate.updateUsersPenaltyPoints(this.bookings);
+      console.log("Library users updated");
+    });
   }
   addBook(book: Book): void {
     const value = this.libraryBooks.get(book) || 0;
