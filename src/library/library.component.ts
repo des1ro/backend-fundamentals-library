@@ -2,7 +2,7 @@ import { Book } from "../book/book.dto";
 import { LibraryError } from "../exceptions/library.exceptions";
 import { User } from "../user/user.dto";
 import { Booking } from "./service/booking/booking.service";
-import { UsersUpdate } from "./service/usersUpdate/service/userUpdate/usersUpdate.service";
+import { UsersUpdate } from "./service/usersUpdate/usersUpdate.service";
 import * as cron from "node-cron";
 
 export class Library {
@@ -16,7 +16,7 @@ export class Library {
   constantlyUpdateUsers(): void {
     cron.schedule("* 30 5 * * * ", () => {
       console.log("Update users every day at 5:30");
-      this.usersUpdate.updateUsersPenaltyPoints(this.bookings);
+      this.usersUpdate.update(this.bookings);
       console.log("Library users updated");
     });
   }
@@ -40,7 +40,7 @@ export class Library {
     this.libraryBooks.delete(book);
   }
   createBooking(user: User) {
-    if (this.bookings.get(user)) {
+    if (this.bookings.has(user)) {
       throw new LibraryError({
         name: "BOOKING_ERROR",
         message: "Booking already exist",
@@ -75,9 +75,9 @@ export class Library {
         message: "Book not found",
       });
     }
-    booking.returnBook(book);
     const currentAmount = this.libraryBooks.get(book);
     if (currentAmount !== undefined) {
+      booking.returnBook(book);
       this.libraryBooks.set(book, currentAmount + 1);
       return;
     }
