@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Booking test suite Return book suite test Should add book to user correctly 1`] = `
+Booking {
+  "booksBorrowDate": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1999,
+    } => 2023-01-20T11:30:00.000Z,
+  },
+  "user": User {
+    "dueDate": 0,
+    "name": "Test user",
+    "penaltyPoints": 0,
+    "uuid": "test-uuid",
+  },
+}
+`;
+
+exports[`Booking test suite Return book suite test Should return book correctly 1`] = `
+Booking {
+  "booksBorrowDate": Map {},
+  "returnBook": [MockFunction] {
+    "calls": [
+      [
+        Book {
+          "author": "Test author One",
+          "title": "Test title One",
+          "year": 1999,
+        },
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "user": User {
+    "dueDate": 0,
+    "name": "Test user",
+    "penaltyPoints": 0,
+    "uuid": "test-uuid",
+  },
+}
+`;

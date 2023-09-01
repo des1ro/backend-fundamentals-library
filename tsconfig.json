@@ -1,30 +1,22 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2022",
     "module": "commonjs",
+    "lib": ["DOM", "ES2023.Array", "ES7", "ES2021.String"],
     "moduleResolution": "node",
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/typings"
-    ],
+    "typeRoots": ["./node_modules/@types", "./src/typings"],
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "@common": [
-        "src/common"
-      ],
-      "@data/*": [
-        "src/data/*"
-      ]
+      "@common": ["src/common"],
+      "@data/*": ["src/data/*"]
     },
 
     "strict": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

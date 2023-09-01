@@ -1,0 +1,718 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Library test suite Borrow book suite test Should set new amount of books if user borrow 1`] = `
+Library {
+  "bookings": Map {
+    User {
+      "dueDate": 0,
+      "name": "Test user one",
+      "penaltyPoints": 0,
+      "uuid": "test-uuid",
+    } => Booking {
+      "booksBorrowDate": Map {
+        Book {
+          "author": "Test author One",
+          "title": "Test title One",
+          "year": 1992,
+        } => 2023-01-20T11:30:00.000Z,
+      },
+      "user": User {
+        "dueDate": 0,
+        "name": "Test user one",
+        "penaltyPoints": 0,
+        "uuid": "test-uuid",
+      },
+    },
+  },
+  "libraryBooks": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1992,
+    } => 0,
+  },
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Borrow book suite test Should set new amount of books if user borrow 2`] = `
+Library {
+  "bookings": Map {
+    User {
+      "dueDate": 0,
+      "name": "Test user one",
+      "penaltyPoints": 0,
+      "uuid": "test-uuid",
+    } => Booking {
+      "booksBorrowDate": Map {
+        Book {
+          "author": "Test author One",
+          "title": "Test title One",
+          "year": 1992,
+        } => 2023-01-20T11:30:00.000Z,
+      },
+      "user": User {
+        "dueDate": 0,
+        "name": "Test user one",
+        "penaltyPoints": 0,
+        "uuid": "test-uuid",
+      },
+    },
+  },
+  "libraryBooks": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1992,
+    } => 0,
+  },
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Borrow book suite test Should throw an LibraryError if book isn't in library 1`] = `
+Library {
+  "bookings": Map {
+    User {
+      "dueDate": 0,
+      "name": "Test user one",
+      "penaltyPoints": 0,
+      "uuid": "test-uuid",
+    } => Booking {
+      "booksBorrowDate": Map {},
+      "user": User {
+        "dueDate": 0,
+        "name": "Test user one",
+        "penaltyPoints": 0,
+        "uuid": "test-uuid",
+      },
+    },
+  },
+  "borrowBook": [MockFunction] {
+    "calls": [
+      [
+        User {
+          "dueDate": 0,
+          "name": "Test user one",
+          "penaltyPoints": 0,
+          "uuid": "test-uuid",
+        },
+        Book {
+          "author": "Test author Two",
+          "title": "Test title Two",
+          "year": 1995,
+        },
+      ],
+    ],
+    "results": [
+      {
+        "type": "throw",
+        "value": [INVALID_BOOK: Book isn't in library],
+      },
+    ],
+  },
+  "libraryBooks": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1992,
+    } => 1,
+  },
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Borrow book suite test Should throw an LibraryError if booking don't exist 1`] = `
+Library {
+  "bookings": Map {},
+  "borrowBook": [MockFunction] {
+    "calls": [
+      [
+        User {
+          "dueDate": 0,
+          "name": "Test user one",
+          "penaltyPoints": 0,
+          "uuid": "test-uuid",
+        },
+        Book {
+          "author": "Test author One",
+          "title": "Test title One",
+          "year": 1992,
+        },
+      ],
+    ],
+    "results": [
+      {
+        "type": "throw",
+        "value": [BOOKING_ERROR: Booking doen't exist],
+      },
+    ],
+  },
+  "libraryBooks": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1992,
+    } => 1,
+  },
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Create booking test suite Should create booking correctly 1`] = `
+Library {
+  "bookings": Map {
+    User {
+      "dueDate": 0,
+      "name": "Test user one",
+      "penaltyPoints": 0,
+      "uuid": "test-uuid",
+    } => Booking {
+      "booksBorrowDate": Map {},
+      "user": User {
+        "dueDate": 0,
+        "name": "Test user one",
+        "penaltyPoints": 0,
+        "uuid": "test-uuid",
+      },
+    },
+  },
+  "createBooking": [MockFunction] {
+    "calls": [
+      [
+        User {
+          "dueDate": 0,
+          "name": "Test user one",
+          "penaltyPoints": 0,
+          "uuid": "test-uuid",
+        },
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "libraryBooks": Map {},
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Create booking test suite Should create booking correctly 2`] = `
+Library {
+  "bookings": Map {
+    User {
+      "dueDate": 0,
+      "name": "Test user one",
+      "penaltyPoints": 0,
+      "uuid": "test-uuid",
+    } => Booking {
+      "booksBorrowDate": Map {},
+      "user": User {
+        "dueDate": 0,
+        "name": "Test user one",
+        "penaltyPoints": 0,
+        "uuid": "test-uuid",
+      },
+    },
+  },
+  "createBooking": [MockFunction] {
+    "calls": [
+      [
+        User {
+          "dueDate": 0,
+          "name": "Test user one",
+          "penaltyPoints": 0,
+          "uuid": "test-uuid",
+        },
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "libraryBooks": Map {},
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Create booking test suite Should throw library error if booking with this user already exist 1`] = `
+Library {
+  "bookings": Map {
+    User {
+      "dueDate": 0,
+      "name": "Test user one",
+      "penaltyPoints": 0,
+      "uuid": "test-uuid",
+    } => Booking {
+      "booksBorrowDate": Map {},
+      "user": User {
+        "dueDate": 0,
+        "name": "Test user one",
+        "penaltyPoints": 0,
+        "uuid": "test-uuid",
+      },
+    },
+  },
+  "createBooking": [MockFunction] {
+    "calls": [
+      [
+        User {
+          "dueDate": 0,
+          "name": "Test user one",
+          "penaltyPoints": 0,
+          "uuid": "test-uuid",
+        },
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "libraryBooks": Map {},
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Delete book test suite Should delete book if if delete more than is in library 1`] = `
+Library {
+  "bookings": Map {},
+  "deleteBook": [MockFunction] {
+    "calls": [
+      [
+        Book {
+          "author": "Test author One",
+          "title": "Test title One",
+          "year": 1992,
+        },
+        11,
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "libraryBooks": Map {},
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Delete book test suite Should delete book if if delete more than is in library 2`] = `
+Library {
+  "bookings": Map {},
+  "deleteBook": [MockFunction] {
+    "calls": [
+      [
+        Book {
+          "author": "Test author One",
+          "title": "Test title One",
+          "year": 1992,
+        },
+        11,
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "libraryBooks": Map {},
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Delete book test suite Should set books amoount properly 1`] = `
+Library {
+  "bookings": Map {},
+  "deleteBook": [MockFunction] {
+    "calls": [
+      [
+        Book {
+          "author": "Test author One",
+          "title": "Test title One",
+          "year": 1992,
+        },
+        2,
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "libraryBooks": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1992,
+    } => 8,
+  },
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Delete book test suite Should set books amoount properly 2`] = `
+Library {
+  "bookings": Map {},
+  "deleteBook": [MockFunction] {
+    "calls": [
+      [
+        Book {
+          "author": "Test author One",
+          "title": "Test title One",
+          "year": 1992,
+        },
+        2,
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "libraryBooks": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1992,
+    } => 8,
+  },
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Delete book test suite Should throw an LibraryError if book isn't in library 1`] = `
+Library {
+  "bookings": Map {},
+  "libraryBooks": Map {},
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Return book suite test Should return book properly and set new value in library 1`] = `
+Library {
+  "bookings": Map {
+    User {
+      "dueDate": 0,
+      "name": "Test user one",
+      "penaltyPoints": 0,
+      "uuid": "test-uuid",
+    } => Booking {
+      "booksBorrowDate": Map {},
+      "user": User {
+        "dueDate": 0,
+        "name": "Test user one",
+        "penaltyPoints": 0,
+        "uuid": "test-uuid",
+      },
+    },
+  },
+  "libraryBooks": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1992,
+    } => 5,
+  },
+  "returnBook": [MockFunction] {
+    "calls": [
+      [
+        User {
+          "dueDate": 0,
+          "name": "Test user one",
+          "penaltyPoints": 0,
+          "uuid": "test-uuid",
+        },
+        Book {
+          "author": "Test author One",
+          "title": "Test title One",
+          "year": 1992,
+        },
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Return book suite test Should return book properly and set new value in library 2`] = `
+Library {
+  "bookings": Map {
+    User {
+      "dueDate": 0,
+      "name": "Test user one",
+      "penaltyPoints": 0,
+      "uuid": "test-uuid",
+    } => Booking {
+      "booksBorrowDate": Map {},
+      "user": User {
+        "dueDate": 0,
+        "name": "Test user one",
+        "penaltyPoints": 0,
+        "uuid": "test-uuid",
+      },
+    },
+  },
+  "libraryBooks": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1992,
+    } => 5,
+  },
+  "returnBook": [MockFunction] {
+    "calls": [
+      [
+        User {
+          "dueDate": 0,
+          "name": "Test user one",
+          "penaltyPoints": 0,
+          "uuid": "test-uuid",
+        },
+        Book {
+          "author": "Test author One",
+          "title": "Test title One",
+          "year": 1992,
+        },
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Return book suite test Should throw an LibraryError if booking not exist 1`] = `
+Library {
+  "bookings": Map {},
+  "libraryBooks": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1992,
+    } => 1,
+  },
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Return book suite test Should throw an LibraryError on return wrong book 1`] = `
+Library {
+  "bookings": Map {
+    User {
+      "dueDate": 0,
+      "name": "Test user one",
+      "penaltyPoints": 0,
+      "uuid": "test-uuid",
+    } => Booking {
+      "booksBorrowDate": Map {
+        Book {
+          "author": "Test author One",
+          "title": "Test title One",
+          "year": 1992,
+        } => 2023-01-20T11:30:00.000Z,
+      },
+      "user": User {
+        "dueDate": 0,
+        "name": "Test user one",
+        "penaltyPoints": 0,
+        "uuid": "test-uuid",
+      },
+    },
+  },
+  "libraryBooks": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1992,
+    } => 0,
+  },
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Return book suite test Should throw an LibraryError on return wrong book 2`] = `
+Library {
+  "bookings": Map {
+    User {
+      "dueDate": 0,
+      "name": "Test user one",
+      "penaltyPoints": 0,
+      "uuid": "test-uuid",
+    } => Booking {
+      "booksBorrowDate": Map {
+        Book {
+          "author": "Test author One",
+          "title": "Test title One",
+          "year": 1992,
+        } => 2023-01-20T11:30:00.000Z,
+      },
+      "user": User {
+        "dueDate": 0,
+        "name": "Test user one",
+        "penaltyPoints": 0,
+        "uuid": "test-uuid",
+      },
+    },
+  },
+  "libraryBooks": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1992,
+    } => 0,
+  },
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Should add book to library properly 1`] = `
+Library {
+  "bookings": Map {},
+  "libraryBooks": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1992,
+    } => 1,
+  },
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
+
+exports[`Library test suite Should add book to library properly 2`] = `
+Library {
+  "bookings": Map {},
+  "libraryBooks": Map {
+    Book {
+      "author": "Test author One",
+      "title": "Test title One",
+      "year": 1992,
+    } => 1,
+  },
+  "usersUpdate": UsersUpdate {
+    "penaltyPointsCalc": PenaltyPoints {
+      "borrowMonthsLimit": 1,
+      "penaltyPointsPerBook": 10,
+    },
+  },
+}
+`;
