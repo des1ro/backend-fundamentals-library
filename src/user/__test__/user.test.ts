@@ -1,25 +1,16 @@
-// import { validate } from "uuid";
-// import { User } from "../user.dto";
-// describe("Book test suite", () => {
-//   let objectUnderTest: User;
-//   it("Should create book object properly", () => {
-//     //Given
-//     const testName = "Test name";
-//     //When
-//     objectUnderTest = new User(testName);
-//     const result: boolean = validate(objectUnderTest.uuid);
-//     //Then
-//     expect(objectUnderTest.name).toBe(testName);
-//     expect(objectUnderTest.getPenaltyPoints()).toBe(0);
-//     expect(result).toBeTruthy();
-//   });
-//   it("Should set penaltyPoints properly", () => {
-//     //Given
-//     const penaltyPoints = 5;
-//     objectUnderTest.addPenaltyPoints(penaltyPoints);
-//     //When
-//     const result = objectUnderTest.getPenaltyPoints();
-//     //Then
-//     expect(result).toBe(penaltyPoints);
-//   });
-// });
+import { User } from "../user.dto";
+jest.mock("crypto", () => ({
+  randomUUID: jest.fn().mockReturnValue("test-uuid"),
+}));
+describe("Book test suite", () => {
+  it("Should create user object correctly", () => {
+    //Given
+    const testName = "Test name";
+    const testDueDate = 1647959027055;
+    const testPenaltyPoints = 20;
+    //When
+    const objectUnderTest = new User(testName, testDueDate, testPenaltyPoints);
+    //Then
+    expect(objectUnderTest).toMatchSnapshot();
+  });
+});

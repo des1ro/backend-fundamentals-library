@@ -1,8 +1,8 @@
 import { Book } from "../book/book.dto";
 import { LibraryError } from "../exceptions/library.exceptions";
 import { User } from "../user/user.dto";
-import { Booking } from "./service/booking/booking.service";
-import { UsersUpdate } from "./service/usersUpdate/usersUpdate.service";
+import { Booking } from "../booking/booking.service";
+import { UsersUpdate } from "../user/service/usersUpdate/usersUpdate.service";
 import * as cron from "node-cron";
 
 export class Library {
@@ -20,9 +20,9 @@ export class Library {
       console.log("Library users updated");
     });
   }
-  addBook(book: Book): void {
+  addBook(book: Book, amount = 1): void {
     const value = this.libraryBooks.get(book) || 0;
-    this.libraryBooks.set(book, 1 + value);
+    this.libraryBooks.set(book, amount + value);
   }
   deleteBook(book: Book, amount: number = 1): void {
     const currentAmount = this.libraryBooks.get(book);
@@ -58,13 +58,13 @@ export class Library {
       });
     }
     if (booking) {
-      booking.addBookToUser(book);
       this.libraryBooks.set(book, currentAmount - 1);
+      booking.addBookToUser(book);
       return;
     }
     throw new LibraryError({
       name: "BOOKING_ERROR",
-      message: "Booking does not exist",
+      message: "Booking doen't exist",
     });
   }
   returnBook(user: User, book: Book) {

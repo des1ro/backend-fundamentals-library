@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserUpdate test suite Should add penaltyPoints and ban user if books reach limit 1`] = `
+User {
+  "dueDate": 1689849000000,
+  "getDueDate": [MockFunction] {
+    "calls": [
+      [],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": 1674214200000,
+      },
+    ],
+  },
+  "name": "Mocked user one",
+  "penaltyPoints": 60,
+  "uuid": "test-uuid",
+}
+`;
+
+exports[`UserUpdate test suite Should return and not add penaltyPoints if users books not reach limit 1`] = `
+User {
+  "dueDate": 1681986600000,
+  "getDueDate": [MockFunction] {
+    "calls": [
+      [],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": 1674214200000,
+      },
+    ],
+  },
+  "name": "Mocked user one",
+  "penaltyPoints": 30,
+  "uuid": "test-uuid",
+}
+`;
+
+exports[`UserUpdate test suite Should return and not add penaltyPoints user if user is banned 1`] = `
+User {
+  "dueDate": 0,
+  "getDueDate": [MockFunction] {
+    "calls": [
+      [],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": 1674300600000,
+      },
+    ],
+  },
+  "name": "Mocked user one",
+  "penaltyPoints": 0,
+  "uuid": "test-uuid",
+}
+`;

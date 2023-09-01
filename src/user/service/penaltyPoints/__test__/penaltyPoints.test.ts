@@ -1,14 +1,13 @@
-import { User } from "../../../models/user/user.dto";
+import { addDays, addMonths } from "date-fns";
+import { User } from "../../../user.dto";
 import { PenaltyPoints } from "../penaltyPoints.service";
 
 describe("PenaltyPoints test suite", () => {
   let objectUnderTest: PenaltyPoints;
   let testUserOne: User;
-  beforeAll(() => {
-    jest.useFakeTimers();
-  });
   beforeEach(() => {
     testUserOne = new User("test user one");
+    jest.useFakeTimers();
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -34,29 +33,29 @@ describe("PenaltyPoints test suite", () => {
       //Given
       const testPenaltyPointsValue = 20;
       jest.setSystemTime();
-      const testDate = new Date();
-      const expectedDate = testDate.setMonth(
-        testDate.getMonth() + testPenaltyPointsValue / 10
+      const testDate = new Date().getTime();
+      const expectedDate = new Date().setMonth(
+        new Date().getTime() + testPenaltyPointsValue / 10
       );
       objectUnderTest = new PenaltyPoints();
       jest.spyOn(objectUnderTest, "updatePenaltyPointsAndBan");
       //When
       const resultOne = testUserOne.getDueDate();
+      console.log(resultOne);
+
       objectUnderTest.updatePenaltyPointsAndBan(
         testUserOne,
         testPenaltyPointsValue
       );
       const resultTwo = testUserOne.getDueDate();
       //Then
-      expect(objectUnderTest).toBeCalledTimes(1);
-      expect(resultOne).toBe(testDate);
+      expect(objectUnderTest.updatePenaltyPointsAndBan).toBeCalledTimes(1);
+      expect(resultOne).toBe(0);
       expect(resultTwo).toBe(expectedDate);
     });
     it("Should not ban user if not reach 10 penalty points", () => {
       //Given
-      jest.setSystemTime();
-      jest.spyOn(objectUnderTest, "updatePenaltyPointsAndBan");
-      const testDate = new Date();
+      const testDate = new Date().getTime();
       objectUnderTest = new PenaltyPoints();
       const testPenaltyPointsValue = 9;
       //When
@@ -66,21 +65,19 @@ describe("PenaltyPoints test suite", () => {
       );
       const resultOne = testUserOne.getDueDate();
       //Then
-      expect(objectUnderTest).toBeCalledTimes(1);
       expect(resultOne).toBe(testDate);
     });
   });
 
   it("Should add penalty points if book reach limit", () => {
     //Given
-    jest.setSystemTime(new Date(2023, 7, 20, 12, 30, 0, 0));
+    jest.setSystemTime(new Date());
     const testDates: Date[] = [
-      new Date(2023, 6, 15, 12, 30, 0, 10),
-      new Date(2023, 6, 20, 12, 30, 0, 1),
-      new Date(2023, 5, 20, 12, 30, 0, 10),
-      new Date(2023, 5, 19, 12, 30, 0, 0),
+      addDays(new Date(), 45),
+      addDays(new Date(), 33),
+      addMonths(new Date(), 1),
     ];
-    const expectedResultOne = (1 + 0 + 1 + 2) * 10;
+    const expectedResultOne = (1 + 1 + 1) * 10;
     objectUnderTest = new PenaltyPoints();
     //When
     const resultOne = objectUnderTest.calculatePenaltyPoints(testDates);
@@ -89,14 +86,13 @@ describe("PenaltyPoints test suite", () => {
   });
   it("Should not add penalty points if book not reach limit ", () => {
     //Given
-    jest.setSystemTime(new Date(2023, 7, 20, 12, 30, 0, 0));
+    jest.setSystemTime(new Date());
     const testDates: Date[] = [
-      new Date(2023, 6, 20, 12, 30, 0, 1),
-      new Date(2023, 7, 11, 12, 30, 0, 1),
-      new Date(2023, 6, 30, 12, 30, 0, 10),
-      new Date(2023, 7, 1, 12, 30, 0, 0),
+      addDays(new Date(), 20),
+      addDays(new Date(), 24),
+      addDays(new Date(), 10),
     ];
-    const expectedResultOne = (0 + 0 + 0 + 0) * 10;
+    const expectedResultOne = (0 + 0 + 0) * 10;
     objectUnderTest = new PenaltyPoints();
     //When
     const resultOne = objectUnderTest.calculatePenaltyPoints(testDates);

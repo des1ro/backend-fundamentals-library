@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Book test suite Should create user object correctly 1`] = `
+User {
+  "dueDate": 1647959027055,
+  "name": "Test name",
+  "penaltyPoints": 20,
+  "uuid": "test-uuid",
+}
+`;

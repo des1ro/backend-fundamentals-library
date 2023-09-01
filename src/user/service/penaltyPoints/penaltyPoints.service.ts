@@ -1,5 +1,5 @@
 import { addMonths, differenceInMonths } from "date-fns";
-import { User } from "../../../../../user/user.dto";
+import { User } from "../../user.dto";
 
 export class PenaltyPoints {
   private readonly borrowMonthsLimit: number;
@@ -20,7 +20,7 @@ export class PenaltyPoints {
   calculatePenaltyPoints(booksDates: Date[]): number {
     const currentDate = new Date();
     const totalPoints = booksDates.reduce((accumulator, bookDate) => {
-      const difference = differenceInMonths(currentDate, bookDate);
+      const difference = differenceInMonths(bookDate, currentDate);
       return (
         accumulator +
         (difference >= this.borrowMonthsLimit ? this.penaltyPointsPerBook : 0)
